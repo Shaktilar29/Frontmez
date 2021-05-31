@@ -1,4 +1,6 @@
-# vuex-ts-project
+# Frontmez
+
+TOUT DANS L'POT
 
 ## Project setup
 ```
