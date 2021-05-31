@@ -6,8 +6,6 @@ import { RootState } from '@/store';
 export enum ActionTypes {
     SetCreateModal = 'SET_CREATE_MODAL'
   }
-
-
   type AugmentedActionContext = {
     commit<K extends keyof Mutations>(
       key: K,
@@ -22,9 +20,8 @@ export enum ActionTypes {
     ): ReturnType<Mutations[K]>
   }*/
 
-
-  export type Actions = {
-    [ActionTypes.SetCreateModal](context: AugmentedActionContext): void
+  export interface Actions {
+    [ActionTypes.SetCreateModal]({ commit }: AugmentedActionContext,payload: boolean): void;
   }
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))

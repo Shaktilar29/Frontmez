@@ -2,16 +2,31 @@
 import { computed, defineComponent, onMounted } from 'vue'
 import PageList from './components/PageList.vue'
 import { useStore } from './store'
-//import { ActionTypes } from './store/modules/page/Action'
+import { PageTypes } from './store/page/Action'
+import { mapGetters } from 'vuex';
+
+
+
 export default defineComponent({
   components: { PageList },
-  setup () {
+  setup() {
     const store = useStore()
-  //  const loading = computed(() => store.state.loading)
-   // onMounted(() => store.dispatch(ActionTypes.GetPageItems))
-   // const totalCount = computed(() => store.getters.totalPageCount)
-    //return { loading, totalCount }
-  }
+    const loading = computed(() => store.state.admins.loading)
+    const totalCount = computed(() => store.getters.totalPageCount)
+    async function fetchPages() {
+      try {
+        await store.dispatch(PageTypes.GetPageItems);
+      } catch (error) {
+        console.error('fetchDocuments', error);
+      }
+    }
+     return {
+      fetchPages, loading, totalCount,
+    };
+  },
+  computed: {
+    ...mapGetters('profile', ['isClient', 'isAdmin']),
+  },
 })
 </script>
 

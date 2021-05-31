@@ -1,7 +1,6 @@
 import { ActionContext, ActionTree } from 'vuex'
 import { Mutations, MutationType } from './Mutation'
-import { PageItem, State } from './State'
-import axios from 'axios'
+import { State } from './State'
 import PageService from '@/services/PageService'
 import { RootState } from '@/store'
 
@@ -11,24 +10,26 @@ export enum PageTypes {
   GetPageItems = "GET_PAGE_ITEMS"
 }
 
-type PageAugments = Omit<ActionContext<State, RootState>, 'commit'> & {
-    commit<K extends keyof Mutations>(
-      key: K,
-      payload: Parameters<Mutations[K]>[1]
-    ): ReturnType<Mutations[K]>
-  }
+type AugmentedActionContext = {
+  commit<K extends keyof Mutations>(
+    key: K,
+    payload: Parameters<Mutations[K]>[1],
+  ): ReturnType<Mutations[K]>;
+} & Omit<ActionContext<State, RootState>, 'commit'>
 
-  export type Actions = {
-    [PageTypes.GetPageItems](context: PageAugments): void
+  export interface Actions {
+    [PageTypes.GetPageItems]({ commit }: AugmentedActionContext): void
    // [PageTypes.AddPage](context: PageAugments, page: PageItem): void
   }
+
 
   const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 export const actions: ActionTree<State, RootState> & Actions = {
-  async [PageTypes.GetPageItems]({ commit }) {
-    PageService.getPageList()
+  async [PageTypes.GetPageItems]( { commit }){
+    commit(MutationType.SetPages,PageService.getPageList())
     await sleep(1000)
+  } 
   },
   /*async [PageTypes.AddPage]({ commit } , //{ page } ) {
     /*try {
@@ -52,3 +53,4 @@ export const actions: ActionTree<State, RootState> & Actions = {
 
   }*/
 }
+

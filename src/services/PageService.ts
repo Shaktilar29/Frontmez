@@ -11,7 +11,7 @@ const headers = {
 };
 class PageService {
 
-  getPageList() {
+  PagesItem[] getPageList() {
 
     try {
       axios.get(API_URL, { headers }).then(response =>{
